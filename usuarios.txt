@@ -1,3 +1,9 @@
-admin;1234
-analista;abcd
-yuri;123456
+# Formato: usuario;senha;papel;nivel
+# Níveis: 1=Estagiário, 2=Estagiário Sênior, 3=Analista Responsável
+
+admin;1234;Estagiário;1
+analista;abcd;Estagiário;1
+yuri;hd19cd12@%;Analista Responsável;3
+
+
+
