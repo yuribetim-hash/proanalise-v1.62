@@ -693,12 +693,7 @@ def tela_login():
             else:
                 st.error("Usuário ou senha inválidos.")
     
-    with st.expander("ℹ️ Sobre os níveis de acesso"):
-        st.markdown("""
-        - **Nível 1 (Estagiário)**: Acesso básico - Realizar análises
-        - **Nível 2 (Estagiário Sênior)**: Acesso intermediário - Análises + Dashboard
-        - **Nível 3 (Analista Responsável)**: Acesso total - Análises + Dashboard + Comparador
-        """)
+   
 
 if "logado" not in st.session_state:
     st.session_state["logado"] = False
