@@ -11,7 +11,7 @@ import plotly.graph_objects as go
 import pandas as pd
 
 st.set_page_config(
-    page_title="Proanalises v1.61",
+    page_title="Proanalise v1.61",
     page_icon="📐",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -29,7 +29,7 @@ if "marcadas_revisao" not in st.session_state:
 if "anotacoes_pessoais" not in st.session_state:
     st.session_state["anotacoes_pessoais"] = {}
 
-HASH_SALT = "proanalises_salt_2024"
+HASH_SALT = "Proanalise_salt_2024"
 
 # ============================================
 # FUNÇÕES DE BACKUP
@@ -587,7 +587,7 @@ def tela_login():
         if os.path.exists("logo.png"):
             st.image("logo.png", width=200)
     
-    st.title("📐 Proanalises v1.61")
+    st.title("📐 Proanalise v1.61")
     st.caption("Sistema de análise urbanística e geração de parecer técnico")
     
     col1, col2, col3 = st.columns([1, 1.2, 1])
@@ -621,7 +621,7 @@ if not st.session_state["logado"]:
 if os.path.exists("logo.png"):
     st.sidebar.image("logo.png", width=150)
 
-st.sidebar.title("📐 Proanalises v1.61")
+st.sidebar.title("📐 Proanalise v1.61")
 st.sidebar.write(f"👤 {st.session_state['usuario']} - {st.session_state.get('papel', 'Analista')}")
 
 # Toggle de tema
@@ -925,7 +925,7 @@ with col_logo:
     if os.path.exists("logo.png"):
         st.image("logo.png", width=100)
 with col_titulo:
-    st.title("📐 Proanalises v1.61")
+    st.title("📐 Proanalise v1.61")
     st.caption("Análise urbanística padronizada com geração de parecer técnico")
 
 # ============================================
