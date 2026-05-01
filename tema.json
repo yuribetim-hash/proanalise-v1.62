@@ -1,0 +1,19 @@
+{
+    "cores": {
+        "primaria": "#0a2a3a",
+        "primaria_clara": "#1a5276",
+        "primaria_muito_escura": "#051a24",
+        "secundaria": "#2c6b96",
+        "sucesso": "#0d6e2e",
+        "erro": "#b42318",
+        "alerta": "#b54708",
+        "info": "#175cd3",
+        "fundo_claro": "#f8fafd",
+        "fundo_branco": "#ffffff",
+        "texto_principal": "#1a1a1a",
+        "texto_secundario": "#2c3e50",
+        "texto_titulo": "#051a24",
+        "fundo_app": "linear-gradient(135deg, #e8f0fe 0%, #d4e4fc 100%)",
+        "sidebar_fundo": "linear-gradient(180deg, #0a2a3a 0%, #051a24 100%)"
+    }
+}
