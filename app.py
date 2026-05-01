@@ -452,6 +452,7 @@ def carregar_tema():
             "fundo_branco": "#ffffff",
             "texto_principal": "#1a1a1a",
             "texto_secundario": "#2c3e50",
+            "texto_caption": "#666666",
             "texto_titulo": "#051a24",
             "fundo_app": "linear-gradient(135deg, #e8f0fe 0%, #d4e4fc 100%)",
             "sidebar_fundo": "linear-gradient(180deg, #0a2a3a 0%, #051a24 100%)"
@@ -485,6 +486,7 @@ def carregar_tema():
             "fundo_branco": "#2a2a3e",
             "texto_principal": "#e0e0e0",
             "texto_secundario": "#b0b0b0",
+            "texto_caption": "#888888",
             "texto_titulo": "#ffffff",
             "fundo_app": "linear-gradient(135deg, #1a1a2e 0%, #0a0a15 100%)",
             "sidebar_fundo": "linear-gradient(180deg, #0a0a15 0%, #05050a 100%)"
