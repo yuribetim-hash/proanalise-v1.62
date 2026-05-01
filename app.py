@@ -521,8 +521,14 @@ css_tema = f"""
     [data-testid="stSidebar"] {{ background: {tema["cores"]["sidebar_fundo"]}; }}
     [data-testid="stSidebar"] * {{ color: {tema["botoes"]["texto"]} !important; }}
     
-    h1 {{ color: {tema["cores"]["texto_titulo"]} !important; }}
-    h2, h3, h4 {{ color: {tema["cores"]["primaria"]} !important; }}
+    h1 {{ color: {tema["cores"]["texto_titulo"]} !important; font-weight: 700 !important; font-size: 24px !important; }}
+    h2, h3, h4 {{ color: {tema["cores"]["primaria"]} !important; font-weight: 600 !important; }}
+    
+    /* Caption - texto abaixo do título */
+    .stCaption {{
+        color: {tema["cores"].get("texto_caption", tema["cores"]["texto_secundario"])} !important;
+        font-size: 14px !important;
+    }}
     
     .stTextInput input, .stTextArea textarea, .stNumberInput input {{
         background-color: {tema["cores"]["fundo_branco"]} !important;
@@ -531,13 +537,55 @@ css_tema = f"""
         border-radius: 6px !important;
     }}
     
-    .stTextInput label, .stSelectbox label, .stTextArea label, .stNumberInput label {{
-        color: {tema["cores"]["primaria_clara"]} !important;
+    .stTextInput input:focus, .stTextArea textarea:focus, .stNumberInput input:focus {{
+        border-color: {tema["cores"]["primaria"]} !important;
+        box-shadow: 0 0 0 2px rgba(26, 82, 118, 0.2) !important;
     }}
     
+    .stTextInput label, .stSelectbox label, .stTextArea label, .stNumberInput label {{
+        color: {tema["cores"]["primaria_clara"]} !important;
+        font-weight: 600 !important;
+    }}
+    
+    .stSelectbox select {{
+        background-color: {tema["cores"]["fundo_branco"]} !important;
+        color: {tema["cores"]["texto_principal"]} !important;
+        border: 1px solid {tema["cores"]["primaria_clara"]} !important;
+        border-radius: 6px !important;
+        font-size: 14px !important;
+    }}
+    
+    /* DROPDOWN - Janela que abre */
+    div[data-baseweb="menu"] {{
+        background-color: #1a1a2e !important;
+        border: 1px solid #2c6b96 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+    }}
+    
+    div[data-baseweb="menu"] div {{
+        background-color: #1a1a2e !important;
+        color: white !important;
+        padding: 8px 16px !important;
+        font-size: 14px !important;
+        cursor: pointer !important;
+    }}
+    
+    div[data-baseweb="menu"] div:hover {{
+        background-color: #2c6b96 !important;
+        color: white !important;
+    }}
+    
+    div[data-baseweb="menu"] div[aria-selected="true"] {{
+        background-color: #0d6e2e !important;
+        color: white !important;
+    }}
+    
+    /* BOTÕES */
     .stButton > button {{
         border-radius: 8px !important;
         font-weight: 600 !important;
+        font-size: 14px !important;
         color: {tema["botoes"]["texto"]} !important;
         border: none !important;
         transition: all 0.3s ease !important;
@@ -547,10 +595,32 @@ css_tema = f"""
         background-color: {tema["botoes"]["primario_fundo"]} !important;
     }}
     
+    .stButton > button[kind="primary"]:hover {{
+        background-color: {tema["botoes"]["primario_fundo_hover"]} !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }}
+    
     .stButton > button:not([kind="primary"]) {{
         background-color: {tema["botoes"]["secundario_fundo"]} !important;
     }}
     
+    .stButton > button:not([kind="primary"]):hover {{
+        background-color: {tema["botoes"]["secundario_fundo_hover"]} !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }}
+    
+    .stButton > button:disabled {{
+        background-color: #cccccc !important;
+        color: #666666 !important;
+    }}
+    
+    .stDownloadButton button {{
+        background-color: {tema["botoes"]["primario_fundo"]} !important;
+    }}
+    
+    /* STATUS BADGES */
     .status-badge-conforme {{
         background-color: {tema["status"]["conforme"]["fundo"]};
         border-left: 4px solid {tema["status"]["conforme"]["borda"]};
@@ -591,14 +661,7 @@ css_tema = f"""
         font-weight: 600;
     }}
     
-    .card-revisao {{
-        background-color: #fff3cd;
-        border-left: 4px solid #ffc107;
-        padding: 8px 12px;
-        border-radius: 6px;
-        margin: 5px 0;
-    }}
-    
+    /* PROGRESSO */
     .progress-wrap {{
         width: 100%;
         background: #e9ecef;
@@ -614,14 +677,70 @@ css_tema = f"""
         transition: width 0.3s ease;
     }}
     
+    /* CARDS E MÉTRICAS */
+    .card {{
+        padding: 12px 16px;
+        border: 1px solid #c5d5e6;
+        border-radius: 10px;
+        background: {tema["cores"]["fundo_claro"]};
+        margin-bottom: 0.6rem;
+        color: {tema["cores"]["texto_principal"]};
+    }}
+    
+    [data-testid="stMetric"] {{
+        background-color: {tema["cores"]["fundo_claro"]};
+        border-radius: 8px;
+        padding: 10px;
+        border: 1px solid #c5d5e6;
+    }}
+    
+    [data-testid="stMetric"] label {{
+        color: {tema["cores"]["primaria"]} !important;
+        font-weight: 600 !important;
+    }}
+    
+    [data-testid="stMetric"] .stMetricValue {{
+        color: {tema["cores"]["texto_principal"]} !important;
+        font-weight: 700 !important;
+    }}
+    
+    /* EXPANDERS */
+    .streamlit-expanderHeader {{
+        background-color: {tema["cores"]["fundo_claro"]} !important;
+        color: {tema["cores"]["primaria"]} !important;
+        font-weight: 600 !important;
+        border-radius: 8px !important;
+    }}
+    
+    .streamlit-expanderContent {{
+        background-color: {tema["cores"]["fundo_branco"]} !important;
+        border-radius: 0 0 8px 8px !important;
+    }}
+    
+    /* CARD DE REVISÃO */
+    .card-revisao {{
+        background-color: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 8px 12px;
+        border-radius: 6px;
+        margin: 5px 0;
+    }}
+    
+    /* TEXTOS GERAIS */
+    p, li, .stMarkdown, .stText {{
+        color: {tema["cores"]["texto_secundario"]};
+    }}
+    
     hr {{
         border-color: {tema["cores"]["primaria_clara"]};
     }}
+    
+    /* INFORMAÇÕES, SUCESSO, AVISOS, ERROS */
+    .stInfo, .stSuccess, .stWarning, .stError {{
+        border-radius: 8px !important;
+    }}
 </style>
 """
-
-st.markdown(css_tema, unsafe_allow_html=True)
-
 # ============================================
 # JAVASCRIPT PARA O DROPDOWN
 # ============================================
