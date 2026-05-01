@@ -17,17 +17,17 @@
         "fundo_app": "linear-gradient(135deg, #e8f0fe 0%, #d4e4fc 100%)",
         "sidebar_fundo": "linear-gradient(180deg, #0a2a3a 0%, #051a24 100%)"
     },
+    "status": {
+        "conforme": {"fundo": "#ecfdf3", "borda": "#067647", "texto": "#067647", "icone": "✅"},
+        "inconforme": {"fundo": "#fef3f2", "borda": "#b42318", "texto": "#7a271a", "icone": "⛔"},
+        "pendente": {"fundo": "#fffaeb", "borda": "#b54708", "texto": "#7a4a0a", "icone": "⏳"},
+        "nao_se_enquadra": {"fundo": "#eff6ff", "borda": "#175cd3", "texto": "#0e4a8a", "icone": "ℹ️"}
+    },
     "botoes": {
         "primario_fundo": "#0d6e2e",
         "primario_fundo_hover": "#0f8a3a",
         "secundario_fundo": "#0a2a3a",
         "secundario_fundo_hover": "#1a5276",
         "texto": "#ffffff"
-    },
-    "status": {
-        "conforme": {"fundo": "#ecfdf3", "borda": "#067647", "texto": "#067647", "icone": "✅"},
-        "inconforme": {"fundo": "#fef3f2", "borda": "#b42318", "texto": "#7a271a", "icone": "⛔"},
-        "pendente": {"fundo": "#fffaeb", "borda": "#b54708", "texto": "#7a4a0a", "icone": "⏳"},
-        "nao_se_enquadra": {"fundo": "#eff6ff", "borda": "#175cd3", "texto": "#0e4a8a", "icone": "ℹ️"}
     }
 }
