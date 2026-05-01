@@ -565,21 +565,64 @@ document.addEventListener('DOMContentLoaded', function() {
 """, unsafe_allow_html=True)
 
 # ============================================
-# USUÁRIOS E LOGIN
+# USUÁRIOS E PERMISSÕES
 # ============================================
 def carregar_usuarios(caminho="usuarios.txt"):
+    """Carrega usuários com níveis de permissão"""
     if not os.path.exists(caminho):
         st.error("Arquivo usuarios.txt não encontrado.")
         st.stop()
+    
     usuarios = {}
     with open(caminho, "r", encoding="utf-8") as f:
         for linha in f:
             linha = linha.strip()
-            if not linha or ";" not in linha:
+            if not linha or linha.startswith("#"):
                 continue
-            usuario, senha = linha.split(";", 1)
-            usuarios[usuario.strip()] = senha.strip()
+            partes = linha.split(";")
+            if len(partes) >= 4:
+                usuario, senha, papel, nivel = partes[0], partes[1], partes[2], partes[3]
+                usuarios[usuario.strip()] = {
+                    "senha": senha.strip(),
+                    "papel": papel.strip(),
+                    "nivel": int(nivel.strip())
+                }
+            elif len(partes) == 3:
+                # Compatibilidade com formato antigo (usuario;senha;papel)
+                usuario, senha, papel = partes
+                usuarios[usuario.strip()] = {
+                    "senha": senha.strip(),
+                    "papel": papel.strip(),
+                    "nivel": 2 if "Sênior" in papel else 1
+                }
+            else:
+                # Compatibilidade com formato muito antigo (usuario;senha)
+                usuario, senha = partes[0], partes[1]
+                usuarios[usuario.strip()] = {
+                    "senha": senha.strip(),
+                    "papel": "Analista",
+                    "nivel": 2
+                }
     return usuarios
+
+def tem_permissao(nivel_necessario):
+    """Verifica se o usuário logado tem permissão para a ação"""
+    if "usuario_info" not in st.session_state:
+        return False
+    return st.session_state["usuario_info"]["nivel"] >= nivel_necessario
+
+def pode_ver_menu(menu_item):
+    """Verifica se o usuário pode ver um item do menu"""
+    niveis_necessarios = {
+        "1. Protocolo": 1,
+        "2. Analista": 1,
+        "3. Análise": 1,
+        "4. Revisão": 1,
+        "5. Gerar parecer": 1,
+        "6. Dashboard": 2,  # Apenas nível 2 e 3
+        "7. Comparador": 3   # Apenas nível 3 (Analista Responsável)
+    }
+    return tem_permissao(niveis_necessarios.get(menu_item, 1))
 
 def tela_login():
     col_logo1, col_logo2, col_logo3 = st.columns([1, 2, 1])
@@ -587,34 +630,35 @@ def tela_login():
         if os.path.exists("logo.png"):
             st.image("logo.png", width=200)
     
-    st.title("📐 Proanalise v1.61")
+    st.title("📐 Proanalises v1.61")
     st.caption("Sistema de análise urbanística e geração de parecer técnico")
     
     col1, col2, col3 = st.columns([1, 1.2, 1])
     with col2:
         st.markdown("### Acesso ao sistema")
         usuarios = carregar_usuarios()
+        
         user = st.text_input("Usuário", key="login_user")
         senha = st.text_input("Senha", type="password", key="login_senha")
         
-        papel = st.selectbox("Papel", ["Estagiário", "Estagiário Sênior", "Analista Responsável"])
-        
         if st.button("Entrar", use_container_width=True, key="btn_login", type="primary"):
-            if user in usuarios and usuarios[user] == senha:
+            if user in usuarios and usuarios[user]["senha"] == senha:
                 st.session_state["logado"] = True
                 st.session_state["usuario"] = user
-                st.session_state["papel"] = papel
+                st.session_state["usuario_info"] = usuarios[user]
+                st.session_state["papel"] = usuarios[user]["papel"]
+                st.session_state["nivel"] = usuarios[user]["nivel"]
                 st.rerun()
             else:
                 st.error("Usuário ou senha inválidos.")
-
-if "logado" not in st.session_state:
-    st.session_state["logado"] = False
-
-if not st.session_state["logado"]:
-    tela_login()
-    st.stop()
-
+    
+    # Informação sobre níveis de acesso
+    with st.expander("ℹ️ Sobre os níveis de acesso"):
+        st.markdown("""
+        - **Nível 1 (Estagiário)**: Acesso básico - Realizar análises
+        - **Nível 2 (Estagiário Sênior)**: Acesso intermediário - Análises + Dashboard
+        - **Nível 3 (Analista Responsável)**: Acesso total - Análises + Dashboard + Comparador
+        """)
 # ============================================
 # SIDEBAR COM CONTROLES
 # ============================================
@@ -672,7 +716,13 @@ if st.sidebar.button("🚪 Sair", use_container_width=True, key="btn_sair"):
 # FUNÇÃO PARA COMPARAR ANÁLISES
 # ============================================
 def render_comparador_analises(protocolo_atual):
+    # Verificar permissão
+    if not tem_permissao(3):
+        st.error("❌ Acesso negado! Apenas Analistas Responsáveis podem acessar o Comparador.")
+        return
+    
     st.subheader("🔍 Comparador de Análises")
+    # ... resto da função
     
     analises = carregar_analises_analistas(protocolo_atual)
     
@@ -929,10 +979,31 @@ with col_titulo:
     st.caption("Análise urbanística padronizada com geração de parecer técnico")
 
 # ============================================
-# NAVEGAÇÃO
+# NAVEGAÇÃO (com base nas permissões)
 # ============================================
-etapas = ["1. Protocolo", "2. Analista", "3. Análise", "4. Revisão", "5. Gerar parecer", "6. Dashboard", "7. Comparador"]
-etapa_atual = st.sidebar.radio("📋 Etapas", etapas, index=etapas.index(st.session_state["etapa"]))
+# Menu base para todos
+menus_base = ["1. Protocolo", "2. Analista", "3. Análise", "4. Revisão", "5. Gerar parecer"]
+
+# Menu adicional para nível 2+
+menus_nivel2 = ["6. Dashboard"]
+
+# Menu adicional para nível 3+
+menus_nivel3 = ["7. Comparador"]
+
+# Construir menu conforme permissão
+menus_disponiveis = []
+for menu in menus_base:
+    if pode_ver_menu(menu):
+        menus_disponiveis.append(menu)
+
+if tem_permissao(2):
+    menus_disponiveis.extend(menus_nivel2)
+
+if tem_permissao(3):
+    menus_disponiveis.extend(menus_nivel3)
+
+etapa_atual = st.sidebar.radio("📋 Etapas", menus_disponiveis, 
+                                index=menus_disponiveis.index(st.session_state["etapa"]) if st.session_state["etapa"] in menus_disponiveis else 0)
 if etapa_atual != st.session_state["etapa"]:
     st.session_state["etapa"] = etapa_atual
     st.rerun()
@@ -1331,10 +1402,20 @@ elif st.session_state["etapa"] == "6. Dashboard":
 # ============================================
 # ETAPA 7 - COMPARADOR
 # ============================================
+# ============================================
+# ETAPA 7 - COMPARADOR
+# ============================================
 elif st.session_state["etapa"] == "7. Comparador":
-    st.header("🔍 Comparador de Análises")
-    
-    protocolo_comp = st.text_input("N° Protocolo para comparar", value=st.session_state.get("protocolo", ""))
-    
-    if protocolo_comp:
-        render_comparador_analises(protocolo_comp)
+    # Verificar permissão
+    if not tem_permissao(3):
+        st.error("❌ Acesso negado! Apenas Analistas Responsáveis podem acessar o Comparador.")
+        if st.button("← Voltar ao menu principal"):
+            st.session_state["etapa"] = "1. Protocolo"
+            st.rerun()
+    else:
+        st.header("🔍 Comparador de Análises")
+        
+        protocolo_comp = st.text_input("N° Protocolo para comparar", value=st.session_state.get("protocolo", ""))
+        
+        if protocolo_comp:
+            render_comparador_analises(protocolo_comp)
